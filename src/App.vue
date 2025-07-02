@@ -8,7 +8,6 @@ const handleYesPlay = () => {
   stage.value = 1;
 };
 
-// DODANA FUNKCJA
 const handleYesLove = () => {
   stage.value = 2;
 };
@@ -71,7 +70,7 @@ const noButtonStyle = computed(() => {
     </div>
 
     <div v-else-if="stage === 2" class="gif-container">
-      <img src="./assets/cute-icegif.gif" alt="Cute GIF" class="responsive-gif" />
+      <img src="/cute-icegif.gif" alt="Cute GIF" class="responsive-gif" />
     </div>
   </div>
 </template>
