@@ -4,6 +4,10 @@ import { ref, computed } from 'vue';
 const stage = ref(0);
 const noButtonPosition = ref({ top: 'auto', left: 'auto', transform: 'none' });
 
+// NOWE: licznik kliknięć i kontrola popupu
+const noClickCount = ref(0);
+const showPopup = ref(false);
+
 const handleYesPlay = () => {
   stage.value = 1;
 };
@@ -13,6 +17,13 @@ const handleYesLove = () => {
 };
 
 const handleNoLove = (event) => {
+  noClickCount.value++;
+  if (noClickCount.value === 5) {
+    showPopup.value = true;
+    noClickCount.value = 0; 
+    return;
+  }
+
   const button = event.target;
   const buttonWidth = button.offsetWidth;
   const buttonHeight = button.offsetHeight;
@@ -46,11 +57,15 @@ const noButtonStyle = computed(() => {
     transition: 'top 0.3s ease-out, left 0.3s ease-out',
   };
 });
+
+const closePopup = () => {
+  showPopup.value = false;
+};
 </script>
 
 <template>
   <div class="container">
-    <h1 class="main-text" v-if="stage === 0">Laura do you want play?</h1>
+    <h1 class="main-text" v-if="stage === 0">Laura do you want to play?</h1>
     <h1 class="main-text" v-else-if="stage === 1">Do you love me?</h1>
     <h1 class="main-text" v-else-if="stage === 2">Love you too!</h1>
 
@@ -72,6 +87,13 @@ const noButtonStyle = computed(() => {
     <div v-else-if="stage === 2" class="gif-container">
       <img src="/cute-icegif.gif" alt="Cute GIF" class="responsive-gif" />
     </div>
+    <div v-if="showPopup" class="popup-overlay">
+      <div class="popup-box">
+        <button class="popup-close" @click="closePopup">✖</button>
+        <p class="popup-text">Stop doing this!</p>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -155,6 +177,47 @@ body {
   height: auto;
   border-radius: 10px;
   box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 182, 193, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.popup-box {
+  background: #fff0f5;
+  border: 2px solid #ffb6c1;
+  border-radius: 20px;
+  padding: 30px 50px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  text-align: center;
+  font-family: 'Pacifico', cursive;
+  color: #ff69b4;
+  position: relative;
+  max-width: 300px;
+}
+
+.popup-close {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  font-size: 1.2em;
+  cursor: pointer;
+  color: #ff69b4;
+}
+
+.popup-text {
+  font-size: 1.8em;
 }
 
 @media (min-width: 768px) {
